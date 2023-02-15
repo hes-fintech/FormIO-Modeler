@@ -1,4 +1,4 @@
-const { Formio } = require('formiojs');
+const { Formio, Templates, Utils } = require('formiojs');
 const path = require('path');
 const clearNode = require('../../util/clearNode');
 const $ = require('jquery');
@@ -126,7 +126,38 @@ class FormioFacade {
     }
 
     attachBuilder(schema, options = {}) {
+
+        const template = `
+        <div class="mb-2">
+        <button
+            class="btn btn-primary btn-md"
+            ref="header"
+        >
+            <span>
+                {{ctx.component.buttonName || "Button"}}
+            </span>
+        </button>
+        
+        {% if (ctx.collapsed || ctx.builder) { %}
+        <div class="card-body dropdownContainer" ref="{{ctx.nestedKey}}" id="{{ctx.instance.id}}-{{ctx.component.key}}" style="background: #ffffff;top: 57px;">
+            {{ctx.children}}
+        </div>
+        {% } %}
+        </div>`;
+
+        const compiledForm = Utils.Evaluator.template(template, 'dropDownComponent');
+
+        const formioDropdownComponentCustomTemplate = (ctx) => {
+            return compiledForm(ctx);
+        };
+
+        Templates.current = {
+            dropDownTemplate: {
+                form: formioDropdownComponentCustomTemplate,
+            }
+        };
         this.registerCustomComponentsFromLibruary();
+
         Formio.builder(this.builderContainer, schema, {...this.builderOptions, ...options, ...this.customComponentsFronLibruaryOptions}).then(builderInstance => {
             this.builder = builderInstance;
             if (this.onSchemaChanged) {
