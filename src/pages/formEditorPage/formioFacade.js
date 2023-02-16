@@ -51,13 +51,7 @@ class FormioFacade {
     
             return {
                 builder: {
-                  customComponents: {
-                    title: "HES Components",
-                    components: {
-                      Well: true,
-                      ...components
-                    },
-                  },
+                    ...components
                 },
             };
         } else {
@@ -158,7 +152,7 @@ class FormioFacade {
         };
         this.registerCustomComponentsFromLibruary();
 
-        Formio.builder(this.builderContainer, schema, {...this.builderOptions, ...options, ...this.customComponentsFronLibruaryOptions}).then(builderInstance => {
+        Formio.builder(this.builderContainer, schema, {...options, ...this.customComponentsFroLibruaryOptions}).then(builderInstance => {
             this.builder = builderInstance;
             if (this.onSchemaChanged) {
                 this.builder.on('render', () => {
