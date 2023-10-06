@@ -155,11 +155,15 @@ class FormioFacade {
         Formio.builder(this.builderContainer, schema, {...options, ...this.customComponentsFroLibruaryOptions}).then(builderInstance => {
             this.builder = builderInstance;
             if (this.onSchemaChanged) {
-                this.builder.on('render', (e) => {
+                this.builder.on('render', () => {
                     this.onSchemaChanged(this.builder.schema);
                 });
                 this.builder.on('change', (e) => {
-                    this.onSchemaChanged(e);
+                    if(e.hasOwnProperty('type')) {
+                        this.onSchemaChanged(e);
+                    } else {
+                        this.onSchemaChanged(this.builder.schema);
+                    }
                 });
             }
         })
