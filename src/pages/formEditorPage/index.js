@@ -229,10 +229,9 @@ function showWelcomeTab() {
 }
 
 function schemaChangedHandler(schema = {}) {
-    console.log(JSON.stringify(schema, undefined, 2))
     jsonViewerFacade.hide();
     formioFacade.detachForm();
-    formioFacade.attachForm(schema);
+    formioFacade.attachForm(schema, { noAlerts: true });
     adjustForm(schema);
 }
 
