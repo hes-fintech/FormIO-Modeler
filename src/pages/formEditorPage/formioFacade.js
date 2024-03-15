@@ -152,15 +152,18 @@ class FormioFacade {
         };
         this.registerCustomComponentsFromLibruary();
 
-        Formio.builder(this.builderContainer, schema, {...options, ...this.customComponentsFroLibruaryOptions}).then(builderInstance => {
+        Formio.builder(this.builderContainer, schema, {...options, ...this.customComponentsFroLibruaryOptions, showFullJsonSchema: true }).then(builderInstance => {
             this.builder = builderInstance;
             if (this.onSchemaChanged) {
                 this.builder.on('render', () => {
                     this.onSchemaChanged(this.builder.schema);
                 });
-                this.builder.on('change', (e) => {
+
+                if(e.hasOwnProperty('type')) {
+                    this.onSchemaChanged(e);
+                } else {
                     this.onSchemaChanged(this.builder.schema);
-                });
+                }
             }
         })
     }
