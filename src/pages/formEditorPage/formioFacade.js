@@ -158,12 +158,10 @@ class FormioFacade {
                 this.builder.on('render', () => {
                     this.onSchemaChanged(this.builder.schema);
                 });
-
-                if(e.hasOwnProperty('type')) {
-                    this.onSchemaChanged(e);
-                } else {
+                this.builder.on('change', (e) => {
                     this.onSchemaChanged(this.builder.schema);
-                }
+                })
+
             }
         })
     }
