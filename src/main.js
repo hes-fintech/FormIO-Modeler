@@ -64,8 +64,7 @@ function createMainWindow() {
         width: 1200,
         title: BASE_TITLE,
         webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
+            nodeIntegration: true
         }
     }).on('close', e => {
         try {
