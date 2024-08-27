@@ -64,7 +64,8 @@ function createMainWindow() {
         width: 1200,
         title: BASE_TITLE,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            contextIsolation: false
         }
     }).on('close', e => {
         try {
@@ -85,7 +86,6 @@ function showPage(path) {
 }
 
 function showStartPage() {
-    clientChanel.send('attachLoader');
     formBuilderPageOpened = false;
     return showPage(PATH_TO_START_PAGE);
 }
