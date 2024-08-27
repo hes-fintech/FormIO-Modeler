@@ -85,13 +85,11 @@ function showPage(path) {
 }
 
 function showStartPage() {
-    clientChanel.send('attachLoader');
     formBuilderPageOpened = false;
     return showPage(PATH_TO_START_PAGE);
 }
 
 function showFormEditorPage() {
-    clientChanel.send('attachLoader');
     formBuilderPageOpened = true;
     return showPage(PATH_TO_FORM_EDITOR_PAGE);
 }
