@@ -51,7 +51,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3  # Updated version
         with:
           path: ${{ matrix.paths }}
 
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3  # Updated version
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
