@@ -43,7 +43,15 @@
       "icon": "data/icons/win/icon.ico"
     },
     "mac": {
-      "target": "default",
+      "target": [
+        {
+          "target": "default",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
       "category": "public.app-category.developer-tools",
       "icon": "data/icons/mac/icon.icns"
     },
