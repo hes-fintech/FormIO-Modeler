@@ -19,12 +19,11 @@ jobs:
 
   build:
     needs: bumpVersion
-    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         include:
-          - os: macOS-latest
+          - os: macos-13            # ⬅︎ use Ventura runners
             task: build-mac
             paths: |
               dist/*.dmg
@@ -36,21 +35,18 @@ jobs:
             task: build-linux
             paths: dist/*.AppImage
 
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - run: git pull origin master
-
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '16.x'
-          cache: 'npm'
-
+          cache: npm
       - run: npm ci
       - run: npm run ${{ matrix.task }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -58,20 +54,16 @@ jobs:
           path: ${{ matrix.paths }}
 
   release:
-    needs:
-      - bumpVersion
-      - build
+    needs: [bumpVersion, build]
     runs-on: ubuntu-latest
     steps:
-      # ↓↓ new inputs ↓↓
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          path: artifacts          # (folder name is arbitrary)
-          merge-multiple: true     # <— flattens all three job uploads into one dir
-
+          path: artifacts
+          merge-multiple: true
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: 'artifacts/**'    # pick up every file inside the flattened folder
+          files: artifacts/**
           tag_name: ${{ needs.bumpVersion.outputs.tag }}
