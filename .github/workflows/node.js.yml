@@ -5,14 +5,12 @@ on:
     branches: [ master ]
 
 jobs:
-
   bumpVersion:
     outputs:
       tag: ${{ steps.bump-version.outputs.newTag }}
-
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4            # ⬅️ bump to v4
+      - uses: actions/checkout@v4
       - id: bump-version
         name: Automated Version Bump
         uses: phips28/gh-action-bump-version@master
@@ -39,11 +37,11 @@ jobs:
             paths: dist/*.AppImage
 
     steps:
-      - uses: actions/checkout@v4            # ⬅️ bump to v4
+      - uses: actions/checkout@v4
       - run: git pull origin master
 
       - name: Use Node.js
-        uses: actions/setup-node@v4          # ⬅️ bump to v4
+        uses: actions/setup-node@v4
         with:
           node-version: '16.x'
           cache: 'npm'
@@ -54,7 +52,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4     # ⬅️ bump to v4 (required)
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.task }}-build
           path: ${{ matrix.paths }}
@@ -65,13 +63,15 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
+      # ↓↓ new inputs ↓↓
       - name: Download artifacts
-        uses: actions/download-artifact@v4   # ⬅️ bump to v4 (required)
+        uses: actions/download-artifact@v4
         with:
-          path: artifact
+          path: artifacts          # (folder name is arbitrary)
+          merge-multiple: true     # <— flattens all three job uploads into one dir
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: 'artifact/*'
+          files: 'artifacts/**'    # pick up every file inside the flattened folder
           tag_name: ${{ needs.bumpVersion.outputs.tag }}
