@@ -6,6 +6,7 @@ const initJQueryNotify = require('../../../libs/notify');
 const isComponent = require('../../util/isComponent');
 const { customComponents } = require('hes-formio-components');
 const customComponentsKeys = Object.keys(customComponents);
+const { registerFormioExtensions } = require('./formio-extensions');
 
 if (!$.notify) {
     initJQueryNotify();
@@ -111,6 +112,7 @@ class FormioFacade {
     }
 
     registerCustomComponentsFromLibruary() {
+        registerFormioExtensions(Formio);
         if (customComponentsKeys.length) {
             customComponentsKeys.forEach((module) => {
                 Formio.registerComponent(module, customComponents[module]);
@@ -152,7 +154,7 @@ class FormioFacade {
         };
         this.registerCustomComponentsFromLibruary();
 
-        Formio.builder(this.builderContainer, schema, {...options, ...this.customComponentsFroLibruaryOptions, showFullJsonSchema: true }).then(builderInstance => {
+        Formio.builder(this.builderContainer, schema, {...options, ...this.customComponentsFronLibruaryOptions, showFullJsonSchema: true }).then(builderInstance => {
             this.builder = builderInstance;
             if (this.onSchemaChanged) {
                 this.builder.on('render', () => {
